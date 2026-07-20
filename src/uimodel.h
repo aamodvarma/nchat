@@ -32,6 +32,18 @@ private:
     void Init();
     void Cleanup();
 
+    std::string getVimStatus();
+    bool VimFeed(wint_t p_Key);
+    bool vimEnabled();
+    bool VimInsertAwaitingNormal();
+    bool VimActiveNonInsert();
+    void VimEnterNormal(int position);
+    void VimEnterInsert(int position);
+    void VimEnterOpPending(int op);
+    bool VimNormalFeed(wint_t p_Key);
+    bool VimOpPendingFeed(wint_t p_Key);
+    void VimDeleteRange(std::wstring& s, int& pos, int from, int to);
+
     void AnyUserKeyInput();
     void TerminalResize();
     void OnKeyDecreaseListWidth();
@@ -285,12 +297,25 @@ private:
     std::unordered_map<std::string, std::unordered_map<std::string, std::set<std::string>>> m_AvailableReactions;
     std::unordered_map<std::string, std::unordered_map<std::string, bool>> m_AvailableReactionsPending;
 
+    enum VimMode {VimInsert, VimNormal, VimVisual, VimOpPending};
+
+    VimMode m_VimMode = VimInsert;
+    bool m_vimEnabled = true;
+    int m_VimCount = 0; // the prefix accumulated for repeated commands eg. 2 in 2w
+    wchar_t m_VimPendingOp = 0; // the pending operator character (d, c, y)
+    int m_VimAnchor = -1;
+    std::wstring m_VimRegister;
+    wchar_t m_VimLastFind = 0, m_VimLastFindCmd = 0;
+
+
+
     bool m_SelectMessageActive = false;
     bool m_ListDialogActive = false;
     bool m_FileListDialogActive = false;
     bool m_MessageDialogActive = false;
     bool m_EditMessageActive = false;
     bool m_FindMessageActive = false;
+    bool m_VimModeActive = true;
 
     bool m_TriggerTerminalBell = false;
     bool m_HomeFetchAll = false;
@@ -307,6 +332,8 @@ public:
   void Init();
   void Cleanup();
   void ReinitView();
+
+  std::string getVimStatus();
 
   void AddProtocol(std::shared_ptr<Protocol> p_Protocol);
   std::unordered_map<std::string, std::shared_ptr<Protocol>> GetProtocols();

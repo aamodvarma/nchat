@@ -188,6 +188,7 @@ void UiKeyConfig::Init(bool p_MapKeys)
   const std::map<std::string, std::string> defaultConfig =
   {
     { "cancel", "KEY_CTRLC" },
+    { "vim_normal", "\\33" },
     { "clear", "KEY_CTRLC" },
     { "quit", "KEY_CTRLQ" },
     { "left", "KEY_LEFT" },
