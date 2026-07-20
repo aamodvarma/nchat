@@ -26,7 +26,6 @@
 Ui::Ui()
 {
   UiConfig::Init();
-
   m_Controller = std::make_shared<UiController>();
   m_Model = std::make_shared<UiModel>();
 }
@@ -49,6 +48,7 @@ void Ui::Init()
 
   printf("\033[?1004h"); // enable terminal focus in/out event
 
+  set_escdelay(15);
   setlocale(LC_ALL, "");
   initscr();
   noecho();

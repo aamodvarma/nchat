@@ -28,6 +28,7 @@ void UiStatusView::Draw()
   std::pair<std::string, std::string>& currentChat = m_Model->GetCurrentChatLocked();
   std::string name = m_Model->GetContactListNameLocked(currentChat.first, currentChat.second, true /*p_AllowId*/,
                                                        true /*p_AllowAlias*/);
+  std::string vimStatus = m_Model->getVimStatus();
   if (!m_Model->GetEmojiEnabledLocked())
   {
     name = StrUtil::Textize(name);
@@ -54,7 +55,8 @@ void UiStatusView::Draw()
     wstatus = std::wstring(statusVPad, ' ') +
       StrUtil::ToWString(name).substr(0, m_W / 2) +
       StrUtil::ToWString(profileDisplayName) +
-      StrUtil::ToWString(chatStatus);
+      StrUtil::ToWString(chatStatus) + L" " +
+      StrUtil::ToWString(vimStatus);
 
     static const std::string phoneNumberIndicator = UiConfig::GetStr("phone_number_indicator");
     if (!phoneNumberIndicator.empty())
